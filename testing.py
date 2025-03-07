@@ -183,7 +183,7 @@ def to_dimacs(parsed_data, target_states,transitions):
                 current_state = clause_maker("S" + str(x) + "_" + str(i + 1)) #S0_1
                 clauses.append([-next_state , current_state])
                 clauses.append([next_state , -current_state])
-    print(var_map)    
+    # print(var_map)    
     dimacs = f"p cnf {len(var_map)} {len(clauses)}\n"
 
     dimacs += "\n".join(" ".join(map(str, clause)) + " 0 \n" for clause in clauses)
@@ -211,6 +211,9 @@ if __name__ == "__main__":
     with open(dimacs_filename, "w") as file:
         file.write(dimacs_cnf)
 
-    #result = subprocess.run(["picosat", dimacs_filename],
-     #                   capture_output=True, text=True)
-    #print(dimacs_cnf)
+    # picosat-965 folder must be in project directory in order for this command to run properly
+    # also assuming that `./configure.sh && make` has been run already (picosat is compiled & executable exists)
+    # command = f'./picosat-965/picosat {dimacs_filename}'
+    result = subprocess.run(['./picosat-965/picosat', dimacs_filename], capture_output=True, text=True)
+    print(result.stdout)
+    # print(dimacs_cnf)
